@@ -1,47 +1,80 @@
-import 'package:flutter/foundation.dart';
+import 'package:flame/components.dart';
 import 'constants.dart';
 
-class GameState extends ChangeNotifier {
-  int score = 0;
+enum GameStatus { running, paused, dead, levelComplete, gameOver }
+
+class GameState {
+  GameStatus status = GameStatus.running;
   int lives = GameConstants.initialLives;
   int coins = 0;
-  bool isGameOver = false;
-  bool isLevelComplete = false;
-
-  void addScore(int points) {
-    score += points;
-    notifyListeners();
-  }
+  int score = 0;
+  double timeRemaining = 400.0;
+  bool isInvincible = false;
+  double invincibilityTimer = 0.0;
 
   void addCoin() {
     coins++;
-    addScore(GameConstants.coinScore);
-    if (coins % GameConstants.coinsPerLife == 0) {
+    score += GameConstants.coinScore;
+    if (coins >= GameConstants.coinsPerLife) {
+      coins = 0;
       lives++;
     }
-    notifyListeners();
   }
 
-  void loseLife() {
+  void addScore(int points) {
+    score += points;
+  }
+
+  void die() {
     lives--;
     if (lives <= 0) {
-      isGameOver = true;
+      status = GameStatus.gameOver;
+    } else {
+      status = GameStatus.dead;
     }
-    notifyListeners();
   }
 
-  void completeLevel() {
-    isLevelComplete = true;
-    addScore(GameConstants.flagpoleScore);
-    notifyListeners();
+  void respawn() {
+    status = GameStatus.running;
+    isInvincible = true;
+    invincibilityTimer = 2.0;
+  }
+
+  void levelComplete() {
+    score += GameConstants.flagpoleScore;
+    status = GameStatus.levelComplete;
+  }
+
+  void togglePause() {
+    if (status == GameStatus.running) {
+      status = GameStatus.paused;
+    } else if (status == GameStatus.paused) {
+      status = GameStatus.running;
+    }
+  }
+
+  void update(double dt) {
+    if (status != GameStatus.running) return;
+    timeRemaining -= dt;
+    if (timeRemaining <= 0) {
+      timeRemaining = 0;
+      die();
+    }
+    if (isInvincible) {
+      invincibilityTimer -= dt;
+      if (invincibilityTimer <= 0) {
+        isInvincible = false;
+      }
+    }
   }
 
   void reset() {
-    score = 0;
+    status = GameStatus.running;
     lives = GameConstants.initialLives;
     coins = 0;
-    isGameOver = false;
-    isLevelComplete = false;
-    notifyListeners();
+    score = 0;
+    timeRemaining = 400.0;
+    isInvincible = false;
+    invincibilityTimer = 0.0;
   }
 }
