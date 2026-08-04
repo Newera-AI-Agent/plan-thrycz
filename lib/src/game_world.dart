@@ -14,7 +14,7 @@ class MarioWorld extends FlameGame with HasCollisionDetection {
   late Player player;
   late LevelComponent levelComponent;
   late GameState gameState;
-  late Hud hud;
+  late HudComponent hud;
   final List<Enemy> enemies = [];
   bool _paused = false;
 
@@ -33,7 +33,7 @@ class MarioWorld extends FlameGame with HasCollisionDetection {
     player.position = Vector2(100, 300);
     add(player);
 
-    hud = Hud(gameState: gameState);
+    hud = HudComponent(gameState);
     add(hud);
 
     camera.followComponent(
