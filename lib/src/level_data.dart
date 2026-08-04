@@ -1,6 +1,10 @@
 import 'constants.dart';
 
-enum TileType { empty, ground, brick, questionBlock, pipe, flag }
+enum TileType { 
+  empty, ground, brick, questionBlock, pipe, flag;
+  
+  bool get isSolid => this != empty;
+}
 
 class Tile {
   final TileType type;

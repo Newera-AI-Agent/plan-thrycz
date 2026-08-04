@@ -9,6 +9,7 @@ class Player extends PositionComponent with CollisionCallbacks {
   bool isOnGround = false;
   bool isBig = false;
   bool isInvincible = false;
+  double _opacity = 1.0;
   double invincibleTimer = 0;
   static const double invincibleDuration = 2.0;
 
@@ -31,7 +32,7 @@ class Player extends PositionComponent with CollisionCallbacks {
       GameConstants.playerWidth.toInt(),
       GameConstants.playerHeight.toInt(),
     );
-    sprite = Sprite(image);
+    // SpriteComponent handles rendering via priority — Player renders in render()
   }
 
   Future<Picture> _generatePicture() async {
@@ -75,7 +76,7 @@ class Player extends PositionComponent with CollisionCallbacks {
       if (invincibleTimer <= 0) {
         isInvincible = false;
       }
-      opacity = (invincibleTimer * 4).toInt() % 2 == 0 ? 1.0 : 0.4;
+      _opacity = (invincibleTimer * 4).toInt() % 2 == 0 ? 1.0 : 0.4;
     }
 
     if (position.y > GameConstants.deathFallY) {
@@ -140,9 +141,35 @@ class Player extends PositionComponent with CollisionCallbacks {
     }
   }
 
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    canvas.saveLayer(size.toRect(), Paint()..color = Color(0xFFFFFF).withOpacity(_opacity));
+    final w = size.x;
+    final h = size.y;
+    
+    final bodyPaint = Paint()..color = const Color(0xFFE4000F);
+    final skinPaint = Paint()..color = const Color(0xFFFFC08A);
+    final overallsPaint = Paint()..color = const Color(0xFF0038A8);
+    final shoePaint = Paint()..color = const Color(0xFF5C2E00);
+    final buttonPaint = Paint()..color = const Color(0xFFFFD700);
+
+    canvas.drawRect(Rect.fromLTWH(w * 0.25, h * 0.05, w * 0.5, h * 0.15), bodyPaint);
+    canvas.drawCircle(Offset(w * 0.5, h * 0.05), w * 0.13, skinPaint);
+    canvas.drawRect(Rect.fromLTWH(w * 0.2, h * 0.2, w * 0.6, h * 0.3), overallsPaint);
+    canvas.drawRect(Rect.fromLTWH(w * 0.1, h * 0.55, w * 0.35, h * 0.2), shoePaint);
+    canvas.drawRect(Rect.fromLTWH(w * 0.55, h * 0.55, w * 0.35, h * 0.2), shoePaint);
+    canvas.drawRect(Rect.fromLTWH(w * 0.25, h * 0.35, w * 0.15, h * 0.1), bodyPaint);
+    
+    canvas.drawCircle(Offset(w * 0.15, h * 0.08), w * 0.06, Paint()..color = const Color(0xFFFFFFFF));
+    canvas.drawCircle(Offset(w * 0.15, h * 0.08), w * 0.03, Paint()..color = const Color(0xFF000000));
+    canvas.drawCircle(Offset(w * 0.42, h * 0.3), w * 0.04, buttonPaint);
+    canvas.drawCircle(Offset(w * 0.58, h * 0.3), w * 0.04, buttonPaint);
+    
+    canvas.restore();
+  }
+
   MarioWorld? findGame() {
-    return parent ?? (gameRef as MarioWorld);
+    return parent as MarioWorld?;
   }
 }
-
-class MarioWorld {}

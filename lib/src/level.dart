@@ -33,11 +33,6 @@ class LevelComponent extends Component with HasGameRef {
           tileType: type,
           gridX: col,
           gridY: row,
-          position: Vector2(
-            col * GameConstants.tileSize,
-            row * GameConstants.tileSize,
-          ),
-          size: Vector2.all(GameConstants.tileSize),
         );
         tile.add(RectangleHitbox()..collisionType = CollisionType.passive);
         add(tile);
