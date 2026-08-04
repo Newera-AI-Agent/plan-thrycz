@@ -10,9 +10,10 @@ class HudComponent extends Component with HasGameRef {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
+    final cameraPos = gameRef.camera.viewport.position;
     final tp = TextPainter(
       text: TextSpan(
-        text: 'MARIO\n\nSCORE: ${state.score}\nCOINS: ${state.coins}\nLIVES: ${state.lives}\nWORLD: ${state.world}-${state.level}',
+        text: 'MARIO\n\nSCORE: ${state.score}\nCOINS: ${state.coins}\nLIVES: ${state.lives}',
         style: const TextStyle(
           color: Color(0xFFFFFFFF),
           fontSize: 16,
@@ -23,6 +24,6 @@ class HudComponent extends Component with HasGameRef {
       textDirection: TextDirection.ltr,
     );
     tp.layout();
-    tp.paint(canvas, Offset(gameRef.camera.position.x + 16, 16));
+    tp.paint(canvas, Offset(cameraPos.x + 16, 16));
   }
 }

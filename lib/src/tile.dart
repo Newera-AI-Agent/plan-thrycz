@@ -43,10 +43,10 @@ class TileComponent extends PositionComponent {
         paint.style = PaintingStyle.stroke;
         paint.strokeWidth = 1.5;
         canvas.drawLine(const Offset(0, 0), Offset(size.x, 0), paint);
-        canvas.drawLine(const Offset(0, 0), const Offset(0, size.y), paint);
+        canvas.drawLine(const Offset(0, 0), Offset(0, size.y), paint);
         canvas.drawLine(Offset(0, size.y), Offset(size.x, size.y), paint);
         canvas.drawLine(Offset(size.x, 0), Offset(size.x, size.y), paint);
-        canvas.drawLine(const Offset(0, size.y / 2), Offset(size.x, size.y / 2), paint);
+        canvas.drawLine(Offset(0, size.y / 2), Offset(size.x, size.y / 2), paint);
         canvas.drawLine(Offset(size.x / 2, 0), Offset(size.x / 2, size.y), paint);
         paint.style = PaintingStyle.fill;
         break;

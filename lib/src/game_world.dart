@@ -1,8 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/collisions.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'player.dart';
 import 'level.dart';
 import 'enemy.dart';
@@ -11,8 +10,7 @@ import 'level_data.dart';
 import 'game_state.dart';
 import 'hud.dart';
 
-class MarioWorld extends FlameGame
-    with HasCollisionDetection, KeyboardEvents, TapCallbacks {
+class MarioWorld extends FlameGame with HasCollisionDetection {
   late Player player;
   late LevelComponent levelComponent;
   late GameState gameState;
@@ -87,9 +85,9 @@ class MarioWorld extends FlameGame
     }
 
     for (final enemy in enemies) {
-      if (!enemy.isDead && player.toRect().overlaps(enemy.toRect())) {
+      if (enemy.isAlive && player.toRect().overlaps(enemy.toRect())) {
         if (player.velocity.y > 0 && player.position.y + player.height - 10 < enemy.position.y + 10) {
-          enemy.die();
+          enemy.squash();
           player.velocity.y = GameConstants.playerJumpForce * 0.5;
           gameState.addScore(GameConstants.enemyStompScore);
         } else {

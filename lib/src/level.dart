@@ -30,7 +30,9 @@ class LevelComponent extends Component with HasGameRef {
         final type = _map[row][col];
         if (type == TileType.empty) continue;
         final tile = TileComponent(
-          type: type,
+          tileType: type,
+          gridX: col,
+          gridY: row,
           position: Vector2(
             col * GameConstants.tileSize,
             row * GameConstants.tileSize,

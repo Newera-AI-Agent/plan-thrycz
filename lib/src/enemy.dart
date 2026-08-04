@@ -56,9 +56,7 @@ class Enemy extends SpriteAnimationComponent
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
     super.onCollision(intersectionPoints, other);
-    if (other is Player) return;
-    for (final point in intersectionPoints) {
-      if (other is TileComponent && other.tile.isSolid) {
+    if (other is TileComponent && other.tileType.isSolid) {
         final myCenter = absoluteCenter;
         final otherCenter = other.absoluteCenter;
         final overlapX = (size.x + other.size.x) / 2 - (myCenter.x - otherCenter.x).abs();
